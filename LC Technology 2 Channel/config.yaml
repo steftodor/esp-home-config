@@ -1,0 +1,58 @@
+esphome:
+  name: 2ch-relay-board
+  friendly_name: 2ch_relay_board
+
+esp8266:
+  board: esp01_1m
+
+############ RELAY BOARD CONFIG ############
+uart:
+  id: uart_bus
+  baud_rate: 115200
+  tx_pin: GPIO1
+  rx_pin: GPIO3
+
+switch:
+  - platform: template
+    name: "Relay 1"
+    restore_mode: ALWAYS_OFF # Change to meet your prefrences
+    optimistic: true
+    turn_on_action:
+      - uart.write: [0xA0, 0x01, 0x01, 0xA2]
+    turn_off_action:
+      - uart.write: [0xA0, 0x01, 0x00, 0xA1]
+
+  - platform: template
+    name: "Relay 2"
+    restore_mode: ALWAYS_OFF # Change to meet your prefrences
+    optimistic: true
+    turn_on_action:
+      - uart.write: [0xA0, 0x02, 0x01, 0xA3]
+    turn_off_action:
+      - uart.write: [0xA0, 0x02, 0x00, 0xA2]
+
+############ END OF RELAY BOARD CONFIG ############
+
+# Optional: enable webserver
+web_server:
+  port: 80
+  version: 1
+  log: False
+  ota: False
+
+# Enable logging
+logger:
+  baud_rate: 0
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+
+captive_portal:
